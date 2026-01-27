@@ -11,7 +11,11 @@ inputs:
   googleAppCreds:
     required: false
     default: "service-credentials.json"
-    description: "Defaults to "
+    description: "The service credentials json key..."
+  file:
+    required: false
+    default: ./build/app/outputs/flutter-apk/app-debug.apk
+    description: "Where the APK goes to"
 
 branding:
   color: 'green'
@@ -30,4 +34,4 @@ runs:
         curl -sL https://firebase.tools | bash
         echo "${{ inputs.gpgSecretsKey }}" | gpg --batch --import
         git secret reveal
-        firebase appdistribution:distribute ${{inputs.file:-./build/app/outputs/flutter-apk/app-debug.apk}} --app ${{inputs.appId}}
+        firebase appdistribution:distribute ${{inputs.file}} --app ${{inputs.appId}}
