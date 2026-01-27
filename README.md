@@ -13,6 +13,7 @@ uses: etherbeing/firebase-app-distribution
 with:
   appId: ${{secrets.FIREBASE_APP_ID}}
   gpgSecretsKey: ${{secrets.GPG_PRIVATE_KEY}}
+  googleAppCreds: "service-credentials.json"
 ``` 
 
 ## Afterwords
