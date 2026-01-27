@@ -26,9 +26,9 @@ runs:
   steps:
     - name:  
       shell: bash
-      env: 
-        - GPG_TTY: /dev/tty
-        - GOOGLE_APPLICATION_CREDENTIALS: ${{inputs.googleAppCreds}}
+      env:
+        GPG_TTY: /dev/tty
+        GOOGLE_APPLICATION_CREDENTIALS: ${{inputs.googleAppCreds}}
       run: |
         apt-get update && apt-get install -y git-secret gnupg curl bash
         curl -sL https://firebase.tools | bash
