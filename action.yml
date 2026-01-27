@@ -1,41 +1,22 @@
 name: 'Firebase App Distribution'
-description: 'GitHub Action that uploads artifacts to Firebase App Distribution'
-author: 'Wojciech Zięba <@wzieba>'
+description: 'GitHub Action that uploads artifacts to Firebase App Distribution, via safe opinionated project structure'
+author: 'Esteban Chacon <@etherbeing>'
 inputs:
   appId:
     description: 'App id can be found on the General Settings page'
     required: true
-  token:
-    description: 'Upload token - see Firebase CLI Reference'
-    required: false
-  serviceCredentialsFile:
-    description: 'Service credentials file'
-    required: false
-  serviceCredentialsFileContent:
-    description: 'Content of service credentials file'
-    required: false
-  file:
-    description: 'Artifact to upload (.apk or .ipa)'
+  gpgSecretsKey:
     required: true
-  groups:
-    description: 'Distribution groups'
-    required: false
-  testers:
-    description: 'Distribution testers'
-    required: false
-  releaseNotes:
-    description: 'Release notes visible on release page'
-    required: false
-  releaseNotesFile:
-    description: 'Release notes visible on release page'
-    required: false    
-  debug:
-    description: 'Flag that can included to print verbose log output.'
-    required: false
-    default: false
+    description: "DO NOT UPLOAD CREDENTIALS INSTEAD USE A SAFE GIT SECRET KEY FOR REVEALING THEM, you may rotate it if you want to..."
 branding:
   color: 'orange'
   icon: 'send'
 runs:
-  using: 'docker'
-  image: docker://ghcr.io/wzieba/firebase-distribution-github-action:sha-344aa66
+  using: 'shell'
+  env: GPG_TTY: /dev/tty
+  run: |
+    apt-get update && apt-get install -y git-secret gnupg curl bash
+    curl -sL https://firebase.tools | bash
+    echo "${{ inputs.gpgSecretsKey }}" | gpg --batch --import
+    git secret reveal
+    firebase appdistribution:distribute ${{inputs.file:-./build/app/outputs/flutter-apk/app-debug.apk}} --app ${{inputs.appId}}
