@@ -12,17 +12,21 @@ inputs:
     required: false
     default: "service-credentials.json"
     description: "Defaults to "
+
 branding:
   color: 'green'
   icon: 'send'
+
 runs:
-  using: 'shell'
+  using: 'composite'
   env: 
     - GPG_TTY: /dev/tty
     - GOOGLE_APPLICATION_CREDENTIALS: ${{inputs.googleAppCreds}}
-  run: |
-    apt-get update && apt-get install -y git-secret gnupg curl bash
-    curl -sL https://firebase.tools | bash
-    echo "${{ inputs.gpgSecretsKey }}" | gpg --batch --import
-    git secret reveal
-    firebase appdistribution:distribute ${{inputs.file:-./build/app/outputs/flutter-apk/app-debug.apk}} --app ${{inputs.appId}}
+  steps:
+    shell: bash
+    run: |
+      apt-get update && apt-get install -y git-secret gnupg curl bash
+      curl -sL https://firebase.tools | bash
+      echo "${{ inputs.gpgSecretsKey }}" | gpg --batch --import
+      git secret reveal
+      firebase appdistribution:distribute ${{inputs.file:-./build/app/outputs/flutter-apk/app-debug.apk}} --app ${{inputs.appId}}
