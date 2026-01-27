@@ -16,6 +16,10 @@ inputs:
     required: false
     default: ./build/app/outputs/flutter-apk/app-debug.apk
     description: "Where the APK goes to"
+  withSudoAccess:
+    required: false
+    default: false
+    description: "Use only to prepare a host to run this, useful for when running on non self-hosted containers"
 
 branding:
   color: 'green'
@@ -24,14 +28,29 @@ branding:
 runs:
   using: 'composite'
   steps:
-    - name:  
+    - name: Prepare System (Optional)
+      if: ${{inputs.withSudoAccess == true }}
+      shell: bash
+      run: |
+        set -e
+
+        if ! command -v sudo >/dev/null 2>&1; then
+          echo "sudo not available; cannot install system dependencies"
+          exit 1
+        fi
+
+        sudo apt-get update
+        sudo apt-get install -y gnupg curl git-secret
+
+        if ! command -v firebase >/dev/null 2>&1; then
+          curl -sL https://firebase.tools | sudo bash
+        fi
+    - name: Import key, reveal secrets and distribute app
       shell: bash
       env:
         GPG_TTY: /dev/tty
         GOOGLE_APPLICATION_CREDENTIALS: ${{inputs.googleAppCreds}}
       run: |
-        apt-get update && apt-get install -y git-secret gnupg curl bash
-        curl -sL https://firebase.tools | bash
         echo "${{ inputs.gpgSecretsKey }}" | gpg --batch --import
         git secret reveal
         firebase appdistribution:distribute ${{inputs.file}} --app ${{inputs.appId}}
