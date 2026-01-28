@@ -18,7 +18,7 @@ inputs:
     description: "Where the APK goes to"
   withSudoAccess:
     required: false
-    default: false
+    default: "false"
     description: "Use only to prepare a host to run this, useful for when running on non self-hosted containers"
 
 branding:
@@ -29,7 +29,7 @@ runs:
   using: 'composite'
   steps:
     - name: Prepare System (Optional)
-      if: ${{inputs.withSudoAccess == true }}
+      if: ${{inputs.withSudoAccess == "true" }}
       shell: bash
       run: |
         set -e
