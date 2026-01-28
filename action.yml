@@ -29,7 +29,7 @@ runs:
   using: 'composite'
   steps:
     - name: Prepare System (Optional)
-      if: ${{inputs.withSudoAccess == "true" }}
+      if: ${{ inputs.withSudoAccess == 'true' }}
       shell: bash
       run: |
         set -e
@@ -49,8 +49,8 @@ runs:
       shell: bash
       env:
         GPG_TTY: /dev/tty
-        GOOGLE_APPLICATION_CREDENTIALS: ${{inputs.googleAppCreds}}
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ inputs.googleAppCreds }}
       run: |
         echo "${{ inputs.gpgSecretsKey }}" | gpg --batch --import
         git secret reveal
-        firebase appdistribution:distribute ${{inputs.file}} --app ${{inputs.appId}}
+        firebase appdistribution:distribute ${{ inputs.file }} --app ${{ inputs.appId }}
