@@ -51,6 +51,6 @@ runs:
         # GPG_TTY: /dev/tty
         GOOGLE_APPLICATION_CREDENTIALS: ${{ inputs.googleAppCreds }}
       run: |
-        echo "${{ inputs.gpgSecretsKey }}" | gpg --batch --import
+        # echo "${{ inputs.gpgSecretsKey }}" | gpg --batch --import
         git secret reveal
         firebase appdistribution:distribute ${{ inputs.file }} --app ${{ inputs.appId }}
