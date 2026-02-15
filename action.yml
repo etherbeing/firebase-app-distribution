@@ -23,6 +23,10 @@ inputs:
   groups:
     required: false
     description: "A comma separated list of tester's groups to include in this release"
+  releaseNotesFiles:
+    required: false
+    default: CHANGELOG.md
+    description: "File pointing to the release notes"
 branding:
   color: 'green'
   icon: 'send'
@@ -52,4 +56,4 @@ runs:
       env:
         GOOGLE_APPLICATION_CREDENTIALS: ${{ inputs.googleAppCreds }}
       run: |
-        firebase appdistribution:distribute ${{ inputs.file }} --app ${{ inputs.appId }} --groups ${{ inputs.groups }}
+        firebase appdistribution:distribute ${{ inputs.file }} --app ${{ inputs.appId }} --groups ${{ inputs.groups }} --release-notes-file ${{ inputs.releaseNotesFiles }}
