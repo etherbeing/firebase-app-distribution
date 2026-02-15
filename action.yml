@@ -56,4 +56,4 @@ runs:
       env:
         GOOGLE_APPLICATION_CREDENTIALS: ${{ inputs.googleAppCreds }}
       run: |
-        firebase appdistribution:distribute ${{ inputs.file }} --app ${{ inputs.appId }} --groups ${{ inputs.groups }} --release-notes-file ${{ inputs.releaseNotesFiles }}
+        firebase appdistribution:distribute --app ${{ inputs.appId }} --groups ${{ inputs.groups }} --release-notes-file ${{ inputs.releaseNotesFiles }} ${{ inputs.file }}
