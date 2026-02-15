@@ -56,4 +56,17 @@ runs:
       env:
         GOOGLE_APPLICATION_CREDENTIALS: ${{ inputs.googleAppCreds }}
       run: |
-        firebase appdistribution:distribute --app ${{ inputs.appId }} --groups ${{ inputs.groups }} --release-notes-file ${{ inputs.releaseNotesFiles }} ${{ inputs.file }}
+        # Initialize the base command
+        CMD="firebase appdistribution:distribute ${{ inputs.file }} --app ${{ inputs.appId }}"
+    
+        # Conditionally append flags
+        if [ -n "${{ inputs.groups }}" ]; then
+          CMD="$CMD --groups \"${{ inputs.groups }}\""
+        fi
+    
+        if [ -n "${{ inputs.releaseNotesFiles }}" ]; then
+          CMD="$CMD --release-notes-file \"${{ inputs.releaseNotesFiles }}\""
+        fi
+    
+        # Execute the final command
+        eval $CMD
