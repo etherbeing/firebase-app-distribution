@@ -20,7 +20,9 @@ inputs:
     required: false
     default: "false"
     description: "Use only to prepare a host to run this, useful for when running on non self-hosted containers"
-
+  groups:
+    required: false
+    description: "A comma separated list of tester's groups to include in this release"
 branding:
   color: 'green'
   icon: 'send'
@@ -50,4 +52,4 @@ runs:
       env:
         GOOGLE_APPLICATION_CREDENTIALS: ${{ inputs.googleAppCreds }}
       run: |
-        firebase appdistribution:distribute ${{ inputs.file }} --app ${{ inputs.appId }}
+        firebase appdistribution:distribute ${{ inputs.file }} --app ${{ inputs.appId }} --groups ${{ inputs.groups }}
